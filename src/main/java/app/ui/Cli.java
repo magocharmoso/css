@@ -1,10 +1,10 @@
-package src.ui;
+package app.ui;
 
 import java.util.Scanner;
 
-import src.controllers.OrderController;
-import src.controllers.RestaurantController;
-import src.controllers.UserController;
+import app.controllers.OrderController;
+import app.controllers.RestaurantController;
+import app.controllers.UserController;
 
 public class Cli {
     // This is a simple CLI for demonstration purposes. 
@@ -25,7 +25,7 @@ public class Cli {
     private static RestaurantController restaurantController;
     private static OrderController orderController;
 
-    public static void cli(String[] args) {
+    public static void main(String[] args) {
         System.out.println("Welcome to the Food Delivery System CLI!");
         userController = new UserController();
         restaurantController = new RestaurantController();
