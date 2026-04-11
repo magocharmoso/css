@@ -1,7 +1,7 @@
 package pt.ul.fc.css.tascaeats.entities.user;
 
 import jakarta.persistence.*;
-import java.util.Objects;
+
 
 @Entity
 public abstract class User {
