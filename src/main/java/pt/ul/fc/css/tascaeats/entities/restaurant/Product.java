@@ -36,10 +36,12 @@ public class Product {
 
     public Long getProdId() { return this.prodId; }
     public Restaurant getRestaurant() { return this.restaurant; }
+    public String getName() { return this.name; }
     public Long getPrice() { return this.price; }
     public String getDescription() { return this.description; }
     public boolean isAvailable() { return this.availibility; }
 
+    public void setName(String name) { this.name = name; }
     public void setPrice(Long price) { this.price = price; }
     public void setDescription(String description) { this.description = description; }
     public void makeAvailable() { this.availibility = true; }

@@ -20,7 +20,7 @@ public class Address {
     private String doorNum;
 
     @Column(nullable = false)
-    private int floor;
+    private String floor;
 
     @Column(nullable = false)
     private String local;
@@ -38,9 +38,18 @@ public class Address {
     public String getDoorNum() {return doorNum;}
     public void setDoorNum(String newDoor) {this.doorNum=newDoor;}
 
-    public int getFloor() {return floor;}
-    public void setFloor(int newFloor) {this.floor=newFloor;}
+    public String getFloor() {return floor;}
+    public void setFloor(String newFloor) {this.floor=newFloor;}
 
     public String getLocal() {return local;}
     public void setLocal(String newLocal) {this.local=newLocal;}
+
+    @Override
+    public String toString(){
+        return local.toUpperCase() + " "
+                + address.toUpperCase() + " "
+                + doorNum.toUpperCase() + " "
+                + floor.toUpperCase() + " "
+                + codigoPostal.toUpperCase();
+    }
 }

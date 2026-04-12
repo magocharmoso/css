@@ -10,7 +10,6 @@ import pt.ul.fc.css.tascaeats.entities.address.Address;
 @Entity
 public class Restaurant {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nif;
     private boolean open;
     private String name;
@@ -28,7 +27,8 @@ public class Restaurant {
 
     protected Restaurant() { } // JPA
 
-    public Restaurant(String name, Address address, Admin owner) {
+    public Restaurant(Long nif, String name, Address address, Admin owner) {
+        this.nif = nif;
         this.name = name;
         this.address = address;
         this.owner = owner;
@@ -42,12 +42,12 @@ public class Restaurant {
     public boolean isOpen() { return this.open; }
     public List<Product> getMenu() { return Collections.unmodifiableList(this.menu); } 
 
-    
+    public void setNif(Long nif) { this.nif = nif; } // ownership transfer
     public void setName(String name) { this.name = name; } // rebranding
     public void setAddress(Address address) { this.address = address; } // moving
     public void setOwner(Admin owner) { this.owner = owner; } // change owner?
     public void setOpen() { this.open = true; }
     public void setClose() { this.open = false; }
     public void addProduct(Product p) { menu.add(p); }
-    public void removeProduct(Product p) { menu.remove(p); }
+    public void removeProduct(Long productId) { menu.removeIf(p -> Objects.equals(p.getProdId(), productId)); }
 }
