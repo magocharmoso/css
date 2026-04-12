@@ -20,6 +20,11 @@ public final class UserDTO {
         this(user.getId(), user.getName(), user.getEmail(), user.getRole().name());
     }
 
+    // Convert entity -> DTO
+    public static UserDTO fromEntity(User user) {
+        return new UserDTO(user);
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,71 +1,70 @@
 package pt.ul.fc.css.tascaeats.controllers;
 
-import pt.ul.fc.css.tascaeats.repository.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+
+import pt.ul.fc.css.tascaeats.DTOs.UserDTO;
+import pt.ul.fc.css.tascaeats.entities.user.User;
 import pt.ul.fc.css.tascaeats.service.UserService;
 
+@RestController
+@RequestMapping("/api/users")
 public class UserController {
 
-    public static final int NARGSA = 3;
-    public static final int NARGSB = 4;
-    public static final int NARGSC1 = 2;
-    public static final int NARGSC2 = 3;
-    public static final int NARGSC3 = 3;
+    private final UserService userService;
 
-    UserService userService;
-
-    public UserController() {
-        this.userService = new UserService(new UserRepository());
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    /**
-     * A. Login com autenticação.
-     * Faz autenticação em modo mock: qualquer palavra-passe é aceite,
-     * desde que o utilizador exista e seja válido.
-     */
-    public String a(String email, String password) {
-        try{
-            if (userService.verifyUserExists(email)) {
-                return "Utilizador autenticado com sucesso.\n";
-            }
-            else {
-                return "Falha na autenticação: utilizador não encontrado.\n";
-            }
-        }catch (RuntimeException e) {
-            return "Erro: " + e.getMessage() + "\n";
+    // A: login com autenticação mock
+    @PostMapping("/login")
+    public String login(@RequestParam String email, @RequestParam String password) {
+        if (userService.verifyUserExists(email)) {
+            return "Utilizador autenticado com sucesso.";
         }
+        return "Falha na autenticação: utilizador não encontrado.";
     }
 
-    /**
-     * B. Registo de utilizadores.
-     * Permite criar utilizadores do tipo Cliente, Administrador e Entregador.
-     */
-    public String b(String name, String email, String role) {
-        try {
-            userService.register(name, email, role);
-            return "Utilizador registado com sucesso.\n";
-        } catch (RuntimeException e) {
-            return "Erro: " + e.getMessage() + "\n";
-        }
+    // B: registo de utilizadores
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDTO register(@RequestBody @Valid UserUpsertRequest req) {
+        User user = userService.register(req.name(), req.email(), req.role());
+        return new UserDTO(user);
     }
 
-    /**
-     * C.1 Verificar utilizadores.
-     */
-    public String c1(String email) {
-        return "";
+    // C.1: verificar utilizador
+    @GetMapping("/{id}")
+    public UserDTO getById(@PathVariable Long id) {
+        return new UserDTO(userService.getUserById(id));
     }
 
-    /**
-     * C.2 Remover utilizadores.
-     */
-    public String c2() {
-        return "";
+    // C.2: remover utilizador
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        userService.removeUser(id);
     }
 
-    /**
-     * C.3 Atualizar utilizadores.
-     */
-    public String c3() {
-        return "";
+    // C.3: atualizar utilizador
+    @PutMapping("/{id}")
+    public UserDTO update(@PathVariable Long id, @RequestBody @Valid UserUpsertRequest req) {
+        User user = userService.updateUser(id, req.name(), req.email(), req.role());
+        return new UserDTO(user);
+    }
+
+    public record UserUpsertRequest(String name, String email, String role) {
     }
 }
